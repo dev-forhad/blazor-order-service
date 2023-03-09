@@ -1,9 +1,4 @@
-﻿using Common.Supported;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using X.PagedList;
+﻿using System.Linq.Expressions;
 
 namespace Core.Interfaces
 {

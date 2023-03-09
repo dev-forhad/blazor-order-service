@@ -1,6 +1,7 @@
 ﻿
+using BlazorFullStackCrud.Shared.Entities;
 using Core.Interfaces;
-using Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

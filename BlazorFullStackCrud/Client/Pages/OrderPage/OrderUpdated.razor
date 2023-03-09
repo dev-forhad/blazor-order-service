@@ -1,0 +1,50 @@
+﻿@page "/createorder"
+@using System.Collections.Generic
+@inject IOrderClientService OrderClientService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Order</PageTitle>
+
+<h3>Create Order</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+            <th>Hero Name</th>
+            <th>Comic</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in OrderClientService.Orders)
+        {
+            <tr>
+                <td>@order.Name</td>
+                <td>@order.State</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowOrder(order.Id))"><i class="oi oi-pencil"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button class="btn btn-primary" @onclick="CreateNewHero">Create New Hero</button>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await OrderClientService.GetOrders();
+    }
+
+    void ShowOrder(int id)
+    {
+        NavigationManager.NavigateTo($"orderpage/create/{id}");
+    }
+
+    void CreateNewHero()
+    {
+        NavigationManager.NavigateTo("/orderpage/create");
+    }
+}

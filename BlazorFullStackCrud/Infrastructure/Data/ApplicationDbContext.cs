@@ -1,6 +1,6 @@
 ﻿using BlazorFullStackCrud.Shared;
-using Shared.Entities;
 using Microsoft.EntityFrameworkCore;
+using BlazorFullStackCrud.Shared.Entities;
 
 namespace Infrastructure.Data
 {
@@ -19,6 +19,11 @@ namespace Infrastructure.Data
                 new Comic { Id = 1, Name = "Marvel" },
                 new Comic { Id = 2, Name = "DC" }
             );
+
+            modelBuilder.Entity<Window>()
+            .Property(w => w.Id)
+            .ValueGeneratedOnAdd();
+
 
             modelBuilder.Entity<SuperHero>().HasData(
                 new SuperHero
@@ -43,8 +48,11 @@ namespace Infrastructure.Data
         public DbSet<SuperHero> SuperHeroes { get; set; }
 
         public DbSet<Comic> Comics { get; set; }
+
         public DbSet<Order> Orders { get; set; }
-            
-        }
+        public DbSet<Window> Windows { get; set; }
+        public DbSet<SubElement> SubElements { get; set; }
+
+    }
 
 }

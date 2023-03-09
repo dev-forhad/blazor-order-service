@@ -1,4 +1,5 @@
-﻿using Shared.Entities;
+﻿
+using BlazorFullStackCrud.Shared.Entities;
 using Core.Interfaces;
 using Core.Interfaces.Service;
 using System;

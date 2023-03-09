@@ -19,7 +19,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 
         public async Task CreateHero(SuperHero hero)
         {
-            var result = await _http.PostAsJsonAsync("api/superhero", hero);
+            var result = await _http.PostAsJsonAsync("api/order", hero);
             await SetHeroes(result);
         }
 

@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFullStackCrud.Shared"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "BlazorFullStackCrud\Core\Core.csproj", "{96544D5C-2FCA-46B4-B96B-083930992F1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "BlazorFullStackCrud\Common\Common.csproj", "{C8A83C27-11A0-48E2-85BE-4990C3187450}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "BlazorFullStackCrud\Infrastructure\Infrastructure.csproj", "{A720DC4A-26A3-45B2-9FFF-1118F8A12B8A}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{96544D5C-2FCA-46B4-B96B-083930992F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96544D5C-2FCA-46B4-B96B-083930992F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96544D5C-2FCA-46B4-B96B-083930992F1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8A83C27-11A0-48E2-85BE-4990C3187450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8A83C27-11A0-48E2-85BE-4990C3187450}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8A83C27-11A0-48E2-85BE-4990C3187450}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8A83C27-11A0-48E2-85BE-4990C3187450}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A720DC4A-26A3-45B2-9FFF-1118F8A12B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A720DC4A-26A3-45B2-9FFF-1118F8A12B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A720DC4A-26A3-45B2-9FFF-1118F8A12B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
