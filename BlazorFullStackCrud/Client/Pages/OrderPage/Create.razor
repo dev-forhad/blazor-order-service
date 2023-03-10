@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 
 
-<h3>Create Order</h3>
+<h5>Create Order</h5>
 
 @if (errorMessage != null)
 {
@@ -18,7 +18,7 @@
 
     <div class="form-group">
         <label for="name">Name:</label>
-        <InputText  class="form-control" @bind-Value="order.Name" />
+        <InputText  class="form-control " @bind-Value="order.Name" />
         <ValidationMessage For="@(() => order.Name)" />
     </div>
 
@@ -28,8 +28,8 @@
         <ValidationMessage For="@(() => order.State)" />
     </div>
 
-    <h4>Windows:</h4>
-    <table class="table">
+    <h5>Windows:</h5>
+    <table class="table table-responsive-sm">
         <thead>
             <tr>
                 <th>Name</th>
@@ -45,7 +45,7 @@
                     <td><InputText @bind-Value="window.Name" /></td>
                     <td><InputNumber @bind-Value="window.QuantityOfWindows" /></td>
                     <td>
-                        <table class="table">
+                        <table class="table table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th>Element</th>
@@ -64,20 +64,20 @@
                                         <td><InputText @bind-Value="subElement.Type" /></td>
                                         <td><InputNumber @bind-Value="subElement.Width" /></td>
                                         <td><InputNumber @bind-Value="subElement.Height" /></td>
-                                        <td><button type="button" class="btn btn-sm btn-primary" @onclick="() => RemoveSubElement(subElement)"><i class="fa fa-remove" style="color:red"></i></button></td>
+                                        <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveSubElement(subElement)"><i class="fa fa-remove" ></i></button></td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddSubElement(window)">Add Sub-element</button>
+                        <button type="button" class="btn btn-sm btn-primary" @onclick="() => AddSubElement(window)">Add Sub-element</button>
                     </td>
-                    <td><button type="button" class="btn btn-danger" @onclick="() => RemoveWindow(window)">Remove Window</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveWindow(window)"><i class="fa fa-remove" ></i></button></td>
                 </tr>
             }
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary" @onclick="AddWindow">Add Window</button>
-
+    <button type="button" class="btn btn-sm btn-primary" @onclick="AddWindow">Add Window</button>
+    <br /><br />
     <button type="submit" class="btn btn-sm btn-primary">Create</button>
 </EditForm>
 
@@ -87,6 +87,18 @@
 
     private Order order = new Order();
     private string errorMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == null)
+        {
+            
+        }
+        else
+        {
+            order = await OrderClientService.GetSingleOrders((int)Id);
+        }
+    }
 
     private void HandleValidSubmit()
     {

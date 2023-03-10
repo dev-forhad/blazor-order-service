@@ -1,9 +1,11 @@
 ﻿
 using BlazorFullStackCrud.Client.Pages;
+using BlazorFullStackCrud.Shared.DTO;
 using BlazorFullStackCrud.Shared.Entities;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BlazorFullStackCrud.Client.Services.SuperHeroService
@@ -20,18 +22,26 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
             _navigationManager = navigationManager;
         }
 
-        public List<Order> Orders { get; set; } = new List<Order>();
-        
+        public List<OrderDTO> Orders { get; set; } = new List<OrderDTO>();
+
         public async Task GetOrders()
         {
-            var result = await _http.GetFromJsonAsync<List<Order>>("api/order/orders");
+            var result = await _http.GetFromJsonAsync<List<OrderDTO>>("api/order/orders");
             if (result != null)
                 Orders = result;
         }
 
+        public async Task<Order> GetSingleOrders(int id)
+        {
+            var result = await _http.GetFromJsonAsync<Order>($"api/order/{id}");
+            if (result != null)
+                return result;
+            throw new Exception("Hero not found!");
+        }
+
 
         // Create method for creating a new order in the database
-     
+
         public async Task CreateOrder(Order order)
         {
             var result = await _http.PostAsJsonAsync("api/order", order);
@@ -52,7 +62,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
             await _http.PutAsJsonAsync($"api/orders/{order.Id}", order);
         }
 
- 
+
 
     }
 }

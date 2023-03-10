@@ -11,7 +11,7 @@ namespace Infrastructure.Data.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
         public Repository(ApplicationDbContext context)

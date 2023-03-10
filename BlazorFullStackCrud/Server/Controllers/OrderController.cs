@@ -1,9 +1,15 @@
-﻿using BlazorFullStackCrud.Shared.Entities;
+﻿using AutoMapper;
+using BlazorFullStackCrud.Server.Common;
+using BlazorFullStackCrud.Shared.DTO;
+using BlazorFullStackCrud.Shared.Entities;
 using Core.Interfaces.Service;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorFullStackCrud.Server.Controllers
 {
@@ -11,67 +17,62 @@ namespace BlazorFullStackCrud.Server.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _context;
-        private readonly ApplicationDbContext _dbContext;
-
-        public OrderController(IOrderService context, ApplicationDbContext dbContext)
+        private readonly IOrderService _orderService;
+        
+        public OrderController(IOrderService orderService)
         {
-            _context = context;
-            _dbContext = dbContext;
+            _orderService = orderService;
         }
 
 
         [HttpGet("orders")]
         public async Task<ActionResult<List<Order>>> GetOrdersData()
         {
-            var orders = await _context.GetOrders();
-            return Ok(orders);
+
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<OrderMappingProfile>());
+            var mapper = config.CreateMapper();
+            var orders = await _orderService.GetOrders();
+            List<OrderDTO> orderDTO = mapper.Map<List<OrderDTO>>(orders);
+
+            //var options = new JsonSerializerOptions
+            //{
+            //    ReferenceHandler = ReferenceHandler.Preserve,
+            //    MaxDepth = 64 // increase the maximum depth if needed
+            //};
+
+            //var json = JsonSerializer.Serialize(orderDTO, options);
+
+
+            return Ok(orderDTO);
         }
 
-
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetSingleOrder(int id)
+        {
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+            {
+                return NotFound("Sorry, no order found. :/");
+            }
+            return Ok(order);
+        }
 
         [HttpPost]
         public async Task<ActionResult<List<Order>>> PostOrder(Order order)
         {
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
-            
 
             try
             {
-
-                // Save the order
-                await _dbContext.Orders.AddAsync(order);
-                await _dbContext.SaveChangesAsync();
-
-                // Save the windows for the order
-                //foreach (var window in order.Windows)
-                //{
-                //    window.OrderId = order.Id;
-                //    await _dbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Windows ON");
-                //    await _dbContext.Windows.AddAsync(window);
-                //    await _dbContext.SaveChangesAsync();
-                //    await _dbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Windows OFF");
-                //    // Save the sub elements for the window
-                //    foreach (var subElement in window.SubElements)
-                //    {
-                //        subElement.WindowId = window.Id;
-                //        await _dbContext.SubElements.AddAsync(subElement);
-                //        await _dbContext.SaveChangesAsync();
-                //    }
-                //}
-
-                await transaction.CommitAsync();
+                await _orderService.AddOrder(order);
 
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 // Handle any exceptions
                 Console.WriteLine(ex.Message);
 
             }
             
-
             return Ok(await GetOrdersData());
         }
 

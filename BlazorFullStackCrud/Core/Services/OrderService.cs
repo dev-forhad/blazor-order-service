@@ -21,7 +21,7 @@ namespace Core.Services
         {
             try
             {
-                return await _orderRepository.GetAllAsync();
+                return await _orderRepository.GetOrders();
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace Core.Services
         {
             try
             {
-                return await _orderRepository.GetByIdAsync(id);
+                return await _orderRepository.GetSingleOrders(id);
             }
             catch (Exception ex)
             {
@@ -43,14 +43,7 @@ namespace Core.Services
 
         public async Task AddOrder(Order order)
         {
-            try
-            {
-               await _orderRepository.CreateAsync(order);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error adding order to database.", ex);
-            }
+            await _orderRepository.AddOrder(order);
         }
 
         public async Task UpdateOrder(Order order)

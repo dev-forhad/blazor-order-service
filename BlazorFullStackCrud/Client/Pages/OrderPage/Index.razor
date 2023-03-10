@@ -1,0 +1,104 @@
+﻿@page "/createorder"
+@using System.Collections.Generic
+@inject IOrderClientService OrderClientService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Order</PageTitle>
+
+<h3>Create Order</h3>
+
+<table class="table table-responsive table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>State</th>
+            <th>Windows</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Model in OrderClientService.Orders)
+        {
+            <tr>
+                <td>@Model.Id</td>
+                <td>@Model.Name</td>
+                <td>@Model.State</td>
+                <td>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Quantity of Windows</th>
+                                <th>Total Sub-Elements</th>
+                                <th>Sub-Elements</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var window in Model.Windows)
+                            {
+                                <tr>
+                                    <td>@window.Id</td>
+                                    <td>@window.Name</td>
+                                    <td>@window.QuantityOfWindows</td>
+                                    <td>@window.TotalSubElements</td>
+                                    <td>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Element</th>
+                                                    <th>Type</th>
+                                                    <th>Width</th>
+                                                    <th>Height</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var subElement in window.SubElements)
+                                                {
+                                                    <tr>
+                                                        <td>@subElement.Id</td>
+                                                        <td>@subElement.Element</td>
+                                                        <td>@subElement.Type</td>
+                                                        <td>@subElement.Width</td>
+                                                        <td>@subElement.Height</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowOrder(Model.Id))"><i class="oi oi-pencil"></i></button>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>
+
+
+<button class="btn btn-primary" @onclick="CreateNewHero">Create New Hero</button>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await OrderClientService.GetOrders();
+    }
+
+    void ShowOrder(int id)
+    {
+        NavigationManager.NavigateTo($"orderpage/create/{id}");
+    }
+
+    void CreateNewHero()
+    {
+        NavigationManager.NavigateTo("/orderpage/create");
+    }
+}
