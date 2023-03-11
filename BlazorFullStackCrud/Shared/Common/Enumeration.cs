@@ -12,4 +12,12 @@ namespace BlazorFullStackCrud.Shared.Common
         Window,
         Subelement
     }
+    public enum ToastLevel
+    {
+        Info,
+        Success,
+        Warning,
+        Error
+    }
+
 }

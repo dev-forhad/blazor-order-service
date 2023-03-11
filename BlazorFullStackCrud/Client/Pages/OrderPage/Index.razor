@@ -1,4 +1,4 @@
-﻿@page "/createorder"
+﻿@page "/orderindex"
 @using System.Collections.Generic
 @inject IOrderClientService OrderClientService
 @inject NavigationManager NavigationManager
@@ -6,6 +6,10 @@
 <PageTitle>Order</PageTitle>
 
 
+@if(OrderClientService.Orders.Count() == 0){
+    <div class="spinner"></div>
+}
+else{
 <div style="margin-bottom:5px;">
     <button class="btn btn-primary" @onclick="CreateNewOrder">Create New Order</button>
 </div>
@@ -82,9 +86,11 @@
                 </td>
             </tr>
         }
-        
+
     </tbody>
 </table>
+}
+
 
 
 @code {
@@ -95,11 +101,11 @@
 
     void ShowOrder(int id)
     {
-        NavigationManager.NavigateTo($"orderpage/create/{id}");
+        NavigationManager.NavigateTo($"ordercreate/{id}");
     }
 
     void CreateNewOrder()
     {
-        NavigationManager.NavigateTo("/orderpage/create");
+        NavigationManager.NavigateTo("/ordercreate");
     }
 }

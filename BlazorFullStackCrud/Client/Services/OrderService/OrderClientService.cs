@@ -40,7 +40,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
         public async Task CreateOrder(OrderDTO order)
         {
             var result = await _http.PostAsJsonAsync("api/order", order);
-            _navigationManager.NavigateTo("createorder");
+            _navigationManager.NavigateTo("orderindex");
         }
 
 
@@ -48,13 +48,13 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
         public async Task UpdateOrder(OrderDTO order)
         {
             await _http.PutAsJsonAsync($"api/order/{order.Id}", order);
-            _navigationManager.NavigateTo("createorder");
+            _navigationManager.NavigateTo("orderindex");
         }
 
         public async Task DeleteOrder(int id)
         {
             var result = await _http.DeleteAsync($"api/order/{id}");
-            _navigationManager.NavigateTo("createorder");
+            _navigationManager.NavigateTo("orderindex");
         }
         
         public async Task DeleteWindow(int id)
@@ -69,7 +69,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 
         public  void GetList()
         {
-            _navigationManager.NavigateTo("createorder");
+            _navigationManager.NavigateTo("orderindex");
         }
     }
 }

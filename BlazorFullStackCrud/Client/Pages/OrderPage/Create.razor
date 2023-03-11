@@ -1,99 +1,104 @@
-﻿@page "/orderpage/create"
-@page "/orderpage/create/{id:int}"
+﻿@page "/ordercreate"
+@page "/ordercreate/{id:int}"
 @using BlazorFullStackCrud.Shared.Common;
 @using BlazorFullStackCrud.Shared.DTO;
 
 @inject IOrderClientService OrderClientService
 @inject NavigationManager NavigationManager
-@using Blazored.Toast
-@using Blazored.Toast.Services;
-@inject IToastService ToastService
+@inject ToastService toastService
 
 <h5>Create Order</h5>
 
+@if (IsLoading)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <EditForm Model="@order" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-<EditForm Model="@order" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        @if (showConfirmationDialog)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Are you sure you want to remove this?</strong>
+                <hr>
+                <button type="button" class="btn btn-danger" @onclick="() => ConfirmDelete(dataEnumType)">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="alert" aria-label="Cancel" @onclick="CancelDelete">Cancel</button>
+            </div>
+        }
 
-    @if (showConfirmationDialog)
-    {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Are you sure you want to remove this?</strong> 
-            <hr>
-            <button type="button" class="btn btn-danger" @onclick="() => ConfirmDelete(dataEnumType)">Yes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="alert" aria-label="Cancel" @onclick="CancelDelete">Cancel</button>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText class="form-control " @bind-Value="order.Name" />
+            <ValidationMessage For="@(() => order.Name)" />
         </div>
-    }
 
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <InputText class="form-control " @bind-Value="order.Name" />
-        <ValidationMessage For="@(() => order.Name)" />
-    </div>
+        <div class="form-group">
+            <label for="state">State:</label>
+            <InputText class="form-control" @bind-Value="order.State" />
+            <ValidationMessage For="@(() => order.State)" />
+        </div>
 
-    <div class="form-group">
-        <label for="state">State:</label>
-        <InputText class="form-control" @bind-Value="order.State" />
-        <ValidationMessage For="@(() => order.State)" />
-    </div>
-
-    <h5>Windows:</h5>
-    <table class="table table-responsive-sm">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Sub-elements</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var window in order.Windows)
-            {
+        <h5>Windows:</h5>
+        <table class="table table-responsive-sm">
+            <thead>
                 <tr>
-                    <td><InputText @bind-Value="window.Name" /></td>
-                    <td><InputNumber @bind-Value="window.QuantityOfWindows" /></td>
-                    <td>
-                        <table class="table table-responsive-sm">
-                            <thead>
-                                <tr>
-                                    <th>Element</th>
-                                    <th>Type</th>
-                                    <th>Width</th>
-                                    <th>Height</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var subElement in window.SubElements)
-                                {
-                                    <tr>
-                                        <td>
-                                            <InputText @bind-Value="subElement.Element" />
-                                        </td>
-                                        <td><InputText @bind-Value="subElement.Type" /></td>
-                                        <td><InputNumber @bind-Value="subElement.Width" /></td>
-                                        <td><InputNumber @bind-Value="subElement.Height" /></td>
-                                        <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveSubElement(window.Id,subElement)"><i class="fa fa-remove"></i></button></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-sm btn-primary" @onclick="() => AddSubElement(window)">Add Sub-element</button>
-                    </td>
-                    <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveWindow(window)"><i class="fa fa-remove"></i></button></td>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Sub-elements</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <button type="button" class="btn btn-sm btn-primary" @onclick="AddWindow">Add Window</button>
-    <br /><br />
-    <button type="submit" class="btn btn-sm btn-primary">@btnText</button>
-    <button class="btn btn-sm btn-danger" @onclick="() => ConfirmDelete(DataEnumType.Order)">Delete</button>
-    <button class="btn btn-sm btn-info" @onclick="() => Close()">Close</button>
+            </thead>
+            <tbody>
+                @foreach (var window in order.Windows)
+                {
+                    <tr>
+                        <td><InputText @bind-Value="window.Name" /></td>
+                        <td><InputNumber @bind-Value="window.QuantityOfWindows" /></td>
+                        <td>
+                            <table class="table table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Element</th>
+                                        <th>Type</th>
+                                        <th>Width</th>
+                                        <th>Height</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var subElement in window.SubElements)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <InputText @bind-Value="subElement.Element" />
+                                            </td>
+                                            <td><InputText @bind-Value="subElement.Type" /></td>
+                                            <td><InputNumber @bind-Value="subElement.Width" /></td>
+                                            <td><InputNumber @bind-Value="subElement.Height" /></td>
+                                            <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveSubElement(window.Id,subElement)"><i class="fa fa-remove"></i></button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-sm btn-primary" @onclick="() => AddSubElement(window)">Add Sub-element</button>
+                        </td>
+                        <td><button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveWindow(window)"><i class="fa fa-remove"></i></button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-primary" @onclick="AddWindow">Add Window</button>
+        <br /><br />
+        <button type="submit" class="btn btn-sm btn-primary">@btnText</button>
+        <button class="btn btn-sm btn-danger" @onclick="() => ConfirmDelete(DataEnumType.Order)">Delete</button>
+        <button class="btn btn-sm btn-info" @onclick="() => Close()">Close</button>
 
-    
-</EditForm>
+
+    </EditForm>
+
+}
 
 
 @code {
@@ -101,7 +106,7 @@
     [Parameter]
     public int? Id { get; set; }
     public int? SubElementWindowId { get; set; }
-
+    bool IsLoading = true;
     private OrderDTO order = new OrderDTO();
 
     string btnText = string.Empty;
@@ -114,24 +119,41 @@
         btnText = Id == null ? "Save Order" : "Update Order";
     }
 
+
     protected override async Task OnParametersSetAsync()
     {
         if (Id != null)
         {
             order = await OrderClientService.GetSingleOrders((int)Id);
         }
+        IsLoading = false;
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
         if (Id == null)
         {
-            OrderClientService.CreateOrder(order);
+            try
+            {
+                await OrderClientService.CreateOrder(order);
+                toastService.ShowToast("Order created successfully", ToastLevel.Success);
+            }
+            catch(Exception ex)
+            {
+                toastService.ShowToast(ex.Message, ToastLevel.Error);
+            }
         }
         else
         {
-            OrderClientService.UpdateOrder(order);
-            ToastService.ShowSuccess("Order created successfully.");
+            try
+            {
+                await OrderClientService.UpdateOrder(order);
+                toastService.ShowToast("Order updated sccessfully", ToastLevel.Success);
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowToast(ex.Message, ToastLevel.Error);
+            }
         }
     }
 
@@ -197,6 +219,7 @@
             }
         }
 
+        toastService.ShowToast(dataEnum.ToString() +" Deleted", ToastLevel.Warning);
     }
 
     private void CancelDelete()
@@ -220,7 +243,7 @@
 
     void Close()
     {
-        ToastService.ShowSuccess("Order created successfully.");
-        //OrderClientService.GetList();
+        //ToastService.ShowSuccess("Order created successfully.");
+        OrderClientService.GetList();
     }
 }
