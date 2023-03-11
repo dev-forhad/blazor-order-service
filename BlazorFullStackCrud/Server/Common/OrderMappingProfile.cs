@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BlazorFullStackCrud.Shared.DTO;
-using BlazorFullStackCrud.Shared.Entities;
+using Core.Entities;
 
 namespace BlazorFullStackCrud.Server.Common
 {

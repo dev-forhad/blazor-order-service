@@ -1,7 +1,8 @@
 ﻿
-using BlazorFullStackCrud.Shared.Entities;
+
 using Core.Interfaces;
 using Core.Interfaces.Service;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Core.Services
         {
             try
             {
-                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.UpdateOrder(order);
             }
             catch (Exception ex)
             {

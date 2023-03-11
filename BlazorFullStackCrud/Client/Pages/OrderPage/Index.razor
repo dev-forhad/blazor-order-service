@@ -5,7 +5,10 @@
 
 <PageTitle>Order</PageTitle>
 
-<h3>Create Order</h3>
+
+<div style="margin-bottom:5px;">
+    <button class="btn btn-primary" @onclick="CreateNewOrder">Create New Order</button>
+</div>
 
 <table class="table table-responsive table-bordered">
     <thead>
@@ -84,8 +87,6 @@
 </table>
 
 
-<button class="btn btn-primary" @onclick="CreateNewHero">Create New Hero</button>
-
 @code {
     protected override async Task OnInitializedAsync()
     {
@@ -97,7 +98,7 @@
         NavigationManager.NavigateTo($"orderpage/create/{id}");
     }
 
-    void CreateNewHero()
+    void CreateNewOrder()
     {
         NavigationManager.NavigateTo("/orderpage/create");
     }

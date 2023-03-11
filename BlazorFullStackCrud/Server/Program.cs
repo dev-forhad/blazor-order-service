@@ -6,7 +6,12 @@ using Core.Interfaces.Service;
 using Core.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repository;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
+using AutoMapper;
+using System.Reflection;
+using BlazorFullStackCrud.Server.Common;
+using Core.Interfaces.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +22,27 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Add dependency 
-
+//Add dependency lifetime
+#region Repository
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IWindowRepository, WindowRepository>();
+builder.Services.AddScoped<ISubElementRepository, SubElementRepository>();
+
+#endregion
+
+#region Service
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<IWindowService, WindowService>();
+builder.Services.AddScoped<ISubElementService, SubElementService>();
+
+#endregion
+
+#region Common
+builder.Services.AddScoped<ApplicationDbContext>(); 
+#endregion
+
+//Add auto mapper config
+builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
 
 var app = builder.Build();
 

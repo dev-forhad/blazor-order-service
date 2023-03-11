@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BlazorFullStackCrud.Server.Common;
 using BlazorFullStackCrud.Shared.DTO;
-using BlazorFullStackCrud.Shared.Entities;
 using Core.Interfaces.Service;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Core.Entities;
 
 namespace BlazorFullStackCrud.Server.Controllers
 {
@@ -18,31 +18,24 @@ namespace BlazorFullStackCrud.Server.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        
-        public OrderController(IOrderService orderService)
+        private readonly IWindowService _windowService;
+        private readonly ISubElementService _subElementService;
+        private readonly IMapper _mapper;
+        public OrderController(IOrderService orderService, IMapper mapper, IWindowService windowService, ISubElementService subElementService)
         {
             _orderService = orderService;
+            _windowService = windowService;
+            _subElementService = subElementService;
+            _mapper = mapper;   
         }
 
+        #region Order 
 
         [HttpGet("orders")]
-        public async Task<ActionResult<List<Order>>> GetOrdersData()
+        public async Task<ActionResult<List<OrderDTO>>> GetOrdersData()
         {
-
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<OrderMappingProfile>());
-            var mapper = config.CreateMapper();
             var orders = await _orderService.GetOrders();
-            List<OrderDTO> orderDTO = mapper.Map<List<OrderDTO>>(orders);
-
-            //var options = new JsonSerializerOptions
-            //{
-            //    ReferenceHandler = ReferenceHandler.Preserve,
-            //    MaxDepth = 64 // increase the maximum depth if needed
-            //};
-
-            //var json = JsonSerializer.Serialize(orderDTO, options);
-
-
+            List<OrderDTO> orderDTO = _mapper.Map<List<OrderDTO>>(orders);
             return Ok(orderDTO);
         }
 
@@ -54,7 +47,9 @@ namespace BlazorFullStackCrud.Server.Controllers
             {
                 return NotFound("Sorry, no order found. :/");
             }
-            return Ok(order);
+
+            var orderDTO = _mapper.Map<OrderDTO>(order);
+            return Ok(orderDTO);
         }
 
         [HttpPost]
@@ -72,9 +67,45 @@ namespace BlazorFullStackCrud.Server.Controllers
                 Console.WriteLine(ex.Message);
 
             }
-            
+
             return Ok(await GetOrdersData());
         }
 
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<Order>>> UpdateOrder(Order order, int id)
+        {
+            await _orderService.UpdateOrder(order);
+
+            return Ok(await GetOrdersData());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task DeleteOrder(int id)
+        {
+            await _orderService.DeleteOrder(id);
+        }
+
+
+        #endregion
+
+        #region Window
+
+        [HttpDelete("window-delete/{id}")]
+        public async Task DeleteWindow(int id)
+        {
+            await _windowService.DeleteWindow(id);
+        }
+
+        #endregion
+
+        #region Sub-Element
+
+        [HttpDelete("subelement-delete/{id}")]
+        public async Task DeleteSubElement(int id)
+        {
+            await _subElementService.DeleteSubElement(id);
+        }
+        #endregion
     }
 }

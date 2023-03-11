@@ -1,6 +1,6 @@
 ﻿using BlazorFullStackCrud.Shared;
 using Microsoft.EntityFrameworkCore;
-using BlazorFullStackCrud.Shared.Entities;
+using Core.Entities;
 
 namespace Infrastructure.Data
 {

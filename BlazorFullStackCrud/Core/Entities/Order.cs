@@ -6,21 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorFullStackCrud.Shared.Entities
+namespace Core.Entities
 {
-    public class Window
+    public class Order
     {
-        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required(ErrorMessage = "Please enter a name for the order")]
         public string Name { get; set; }
-        public int QuantityOfWindows { get; set; }
-        public int TotalSubElements { get; set; }
-        [ForeignKey("Order")]
-        public int OrderId { get; set; }
-        public Order? Order { get; set; }
-        public List<SubElement> SubElements { get; set; } = new List<SubElement>();
+        [Required(ErrorMessage = "Please enter a state for the order")]
+        public string State { get; set; }
+        public List<Window> Windows { get; set; } = new List<Window>();
+
     }
 
 }

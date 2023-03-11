@@ -1,5 +1,5 @@
 ﻿
-using BlazorFullStackCrud.Shared.Entities;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

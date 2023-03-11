@@ -1,5 +1,5 @@
 ﻿
-using BlazorFullStackCrud.Shared.Entities;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,6 +36,29 @@ namespace Infrastructure.Data.Repository
 
             }
         }
+
+        public async Task UpdateOrder(Order order)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Save the order
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                // Handle any exceptions
+                Console.WriteLine(ex.Message);
+
+            }
+        }
+
 
         public async Task<IEnumerable<Order>> GetOrders()
         {

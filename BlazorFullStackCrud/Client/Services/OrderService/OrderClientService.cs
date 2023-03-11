@@ -1,12 +1,7 @@
-﻿
-using BlazorFullStackCrud.Client.Pages;
+﻿using BlazorFullStackCrud.Client.Pages;
 using BlazorFullStackCrud.Shared.DTO;
-using BlazorFullStackCrud.Shared.Entities;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 {
@@ -14,7 +9,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
     {
         private readonly HttpClient _http;
         private readonly NavigationManager _navigationManager;
-        public List<Order> OrdersList { get; set; } = new List<Order>();
+        public List<OrderDTO> OrdersList { get; set; } = new List<OrderDTO>();
 
         public OrderClientService(HttpClient http, NavigationManager navigationManager)
         {
@@ -31,9 +26,9 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
                 Orders = result;
         }
 
-        public async Task<Order> GetSingleOrders(int id)
+        public async Task<OrderDTO> GetSingleOrders(int id)
         {
-            var result = await _http.GetFromJsonAsync<Order>($"api/order/{id}");
+            var result = await _http.GetFromJsonAsync<OrderDTO>($"api/order/{id}");
             if (result != null)
                 return result;
             throw new Exception("Hero not found!");
@@ -42,27 +37,39 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 
         // Create method for creating a new order in the database
 
-        public async Task CreateOrder(Order order)
+        public async Task CreateOrder(OrderDTO order)
         {
             var result = await _http.PostAsJsonAsync("api/order", order);
-            await SetOrders(result);
+            _navigationManager.NavigateTo("createorder");
         }
 
-
-        private async Task SetOrders(HttpResponseMessage result)
-        {
-            var response = await result.Content.ReadFromJsonAsync<List<Order>>();
-            OrdersList = response;
-            _navigationManager.NavigateTo("superheroes");
-        }
 
         // Update method for updating an existing order in the database
-        public async Task UpdateOrder(Order order)
+        public async Task UpdateOrder(OrderDTO order)
         {
-            await _http.PutAsJsonAsync($"api/orders/{order.Id}", order);
+            await _http.PutAsJsonAsync($"api/order/{order.Id}", order);
+            _navigationManager.NavigateTo("createorder");
         }
 
+        public async Task DeleteOrder(int id)
+        {
+            var result = await _http.DeleteAsync($"api/order/{id}");
+            _navigationManager.NavigateTo("createorder");
+        }
+        
+        public async Task DeleteWindow(int id)
+        {
+            var result = await _http.DeleteAsync($"api/order/window-delete/{id}");
+        }
 
+        public async Task DeleteSubElement(int id)
+        {
+            var result = await _http.DeleteAsync($"api/order/subelement-delete/{id}");
+        }
 
+        public  void GetList()
+        {
+            _navigationManager.NavigateTo("createorder");
+        }
     }
 }
