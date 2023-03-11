@@ -16,6 +16,6 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
         Task DeleteOrder(int id);
         Task DeleteWindow(int id);
         Task DeleteSubElement(int id);
-        void GetList();
+        Task GoOrderIndex();
     }
 }

@@ -67,7 +67,7 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
             var result = await _http.DeleteAsync($"api/order/subelement-delete/{id}");
         }
 
-        public  void GetList()
+        public  async Task GoOrderIndex()
         {
             _navigationManager.NavigateTo("orderindex");
         }
