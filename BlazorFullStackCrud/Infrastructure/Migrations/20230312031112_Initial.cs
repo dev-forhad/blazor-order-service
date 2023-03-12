@@ -4,23 +4,10 @@
 
 namespace Infrastructure.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Comics",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comics", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
@@ -33,28 +20,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SuperHeroes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HeroName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ComicId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SuperHeroes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SuperHeroes_Comics_ComicId",
-                        column: x => x.ComicId,
-                        principalTable: "Comics",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,35 +67,10 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Comics",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "Marvel" });
-
-            migrationBuilder.InsertData(
-                table: "Comics",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { 2, "DC" });
-
-            migrationBuilder.InsertData(
-                table: "SuperHeroes",
-                columns: new[] { "Id", "ComicId", "FirstName", "HeroName", "LastName" },
-                values: new object[] { 1, 1, "Peter", "Spiderman", "Parker" });
-
-            migrationBuilder.InsertData(
-                table: "SuperHeroes",
-                columns: new[] { "Id", "ComicId", "FirstName", "HeroName", "LastName" },
-                values: new object[] { 2, 2, "Bruce", "Batman", "Wayne" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_SubElements_WindowId",
                 table: "SubElements",
                 column: "WindowId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SuperHeroes_ComicId",
-                table: "SuperHeroes",
-                column: "ComicId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Windows_OrderId",
@@ -144,13 +84,7 @@ namespace Infrastructure.Migrations
                 name: "SubElements");
 
             migrationBuilder.DropTable(
-                name: "SuperHeroes");
-
-            migrationBuilder.DropTable(
                 name: "Windows");
-
-            migrationBuilder.DropTable(
-                name: "Comics");
 
             migrationBuilder.DropTable(
                 name: "Orders");

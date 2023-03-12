@@ -6,12 +6,12 @@
 <PageTitle>Order</PageTitle>
 
 
-@if(OrderClientService.Orders.Count() == 0){
+@if(IsLoading){
     <div class="spinner"></div>
 }
 else{
 <div style="margin-bottom:5px;">
-    <button class="btn btn-primary" @onclick="CreateNewOrder">Create New Order</button>
+    <button class="btn btn-sm btn-primary" @onclick="CreateNewOrder">Create New Order</button>
 </div>
 
 <table class="table table-responsive table-bordered">
@@ -82,7 +82,7 @@ else{
                 </td>
 
                 <td>
-                    <button class="btn btn-primary" @onclick="(() => ShowOrder(Model.Id))"><i class="oi oi-pencil"></i></button>
+                    <button class="btn btn-sm btn-primary" @onclick="(() => ShowOrder(Model.Id))"><i class="oi oi-pencil"></i></button>
                 </td>
             </tr>
         }
@@ -94,9 +94,11 @@ else{
 
 
 @code {
+    bool IsLoading = true;
     protected override async Task OnInitializedAsync()
     {
         await OrderClientService.GetOrders();
+        IsLoading = false;
     }
 
     void ShowOrder(int id)
