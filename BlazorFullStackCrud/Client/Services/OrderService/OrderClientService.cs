@@ -19,11 +19,12 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 
         public List<OrderDTO> Orders { get; set; } = new List<OrderDTO>();
 
-        public async Task GetOrders()
+        public async Task<List<OrderDTO>> GetOrders()
         {
             var result = await _http.GetFromJsonAsync<List<OrderDTO>>("api/order/orders");
             if (result != null)
                 Orders = result;
+            return Orders;
         }
 
         public async Task<OrderDTO> GetSingleOrders(int id)
@@ -39,8 +40,8 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
 
         public async Task CreateOrder(OrderDTO order)
         {
-            var result = await _http.PostAsJsonAsync("api/order", order);
-            _navigationManager.NavigateTo("orderindex");
+            await _http.PostAsJsonAsync("api/order", order);
+            _navigationManager.NavigateTo("order-index");
         }
 
 
@@ -48,28 +49,28 @@ namespace BlazorFullStackCrud.Client.Services.SuperHeroService
         public async Task UpdateOrder(OrderDTO order)
         {
             await _http.PutAsJsonAsync($"api/order/{order.Id}", order);
-            _navigationManager.NavigateTo("orderindex");
+            _navigationManager.NavigateTo("order-index");
         }
 
         public async Task DeleteOrder(int id)
         {
-            var result = await _http.DeleteAsync($"api/order/{id}");
-            _navigationManager.NavigateTo("orderindex");
+            await _http.DeleteAsync($"api/order/{id}");
+            _navigationManager.NavigateTo("order-index");
         }
         
         public async Task DeleteWindow(int id)
         {
-            var result = await _http.DeleteAsync($"api/order/window-delete/{id}");
+            await _http.DeleteAsync($"api/order/window-delete/{id}");
         }
 
         public async Task DeleteSubElement(int id)
         {
-            var result = await _http.DeleteAsync($"api/order/subelement-delete/{id}");
+            await _http.DeleteAsync($"api/order/subelement-delete/{id}");
         }
 
-        public  async Task GoOrderIndex()
+        public  async Task GoOrderIndex(string path)
         {
-            _navigationManager.NavigateTo("orderindex");
+            _navigationManager.NavigateTo(path);
         }
     }
 }

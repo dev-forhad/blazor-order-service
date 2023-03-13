@@ -194,7 +194,7 @@ else
             {
                 if (windowToRemove.Id > 0)
                 {
-                    OrderClientService.DeleteWindow(windowToRemove.Id);
+                    await OrderClientService.DeleteWindow(windowToRemove.Id);
                 }
                 order.Windows.Remove(windowToRemove);
                 windowToRemove = null;
@@ -207,7 +207,7 @@ else
             {
                 if (subElementToRemove.Id > 0)
                 {
-                    OrderClientService.DeleteSubElement(subElementToRemove.Id);
+                    await OrderClientService.DeleteSubElement(subElementToRemove.Id);
 
                     var window = order.Windows.FirstOrDefault(w => w.Id == SubElementWindowId);
                     if (window != null)
@@ -258,7 +258,7 @@ else
     async Task Close()
     {
         IsLoading = true;
-        await OrderClientService.GoOrderIndex();
+        await OrderClientService.GoOrderIndex("orderindex");
         IsLoading = false;
     }
 }
